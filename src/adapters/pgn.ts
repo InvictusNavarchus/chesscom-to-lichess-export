@@ -9,10 +9,10 @@ const SELECTORS = {
     'button.share-button-component.icon-share, ' +
     'button.share-button-component.share, ' +
     '#shareMenuButton',
-  dialog: '.share-menu-dialog-component, .cc-modal-body, div[role="dialog"]',
   pgnTabActive: '#tab-pgn.cc-tab-item-active',
   pgnTab: '#tab-pgn, #live_ShareMenuGlobalDialogDownloadButton, .icon-download',
-  dialogButtons: '.share-menu-dialog-component header *, .cc-modal-body button, div[role="dialog"] button',
+  // Broad enough to catch any button inside whatever dialog chess.com renders
+  dialogButtons: 'dialog button, [role="dialog"] button, [class*="modal"] button, [class*="share"] button',
   textarea:
     '.share-menu-tab-pgn-textarea, ' +
     '#live_ShareMenuPgnContentTextareaId, ' +
@@ -40,8 +40,10 @@ async function openShareDialog(): Promise<void> {
   if (!shareBtn) throw new Error('Share button not found');
 
   shareBtn.click();
-  // Wait until the dialog DOM is actually present before proceeding.
-  await waitForElement(SELECTORS.dialog);
+  // Don't wait for a dialog container — its selectors change with chess.com updates.
+  // Wait for the PGN tab button (or textarea if it's the default view), which is
+  // the actual thing openPgnTab needs. This is both more reliable and more precise.
+  await waitForElement(`${SELECTORS.pgnTab}, ${SELECTORS.textarea}`);
 }
 
 async function openPgnTab(): Promise<void> {
