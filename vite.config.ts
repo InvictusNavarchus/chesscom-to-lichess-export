@@ -12,8 +12,7 @@ export default defineConfig({
         description: 'One-click PGN export from Chess.com directly to Lichess analysis',
         icon: 'https://lichess.org/favicon.ico',
         match: [
-          'https://www.chess.com/game/live/*',
-          'https://www.chess.com/game/daily/*',
+          'https://www.chess.com/game/*',
         ],
         grant: ['GM_xmlhttpRequest'],
         connect: ['lichess.org'],

@@ -1,7 +1,7 @@
 import { isButtonInjected, injectButton, setButtonState } from './button';
 import { analyseOnLichess } from './analyseOnLichess';
 
-const GAME_PATH_FRAGMENTS = ['/game/live/', '/game/daily/'];
+const GAME_PATH_FRAGMENTS = ['/game/'];
 
 function isOnGamePage(): boolean {
   return GAME_PATH_FRAGMENTS.some(fragment =>
