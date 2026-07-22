@@ -7,7 +7,8 @@ export default defineConfig({
       entry: 'src/main.ts',
       userscript: {
         name: 'Chess.com → Lichess Analyser',
-        namespace: 'npm/vite-plugin-monkey',
+        author: "Invictus Navarchus",
+        namespace: 'https://github.com/InvictusNavarchus',
         version: '1.0.0',
         description: 'One-click PGN export from Chess.com directly to Lichess analysis',
         icon: 'https://lichess.org/favicon.ico',
