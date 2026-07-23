@@ -5,7 +5,8 @@
 
 A userscript that adds a one-click **"Analyse on Lichess"** button to Chess.com game pages. It extracts the PGN from the page, imports it into Lichess via their public API, and opens the analysis board in a new tab.
 
-![Analyse on Lichess button on Chess.com](assets/screenshot.png)
+![Analyse on Lichess button on Chess.com - Modal Screen](assets/screenshot-modal.png)
+![Analyse on Lichess button on Chess.com - Review Screen](assets/screenshot-sidebar.png)
 
 ## Features
 
