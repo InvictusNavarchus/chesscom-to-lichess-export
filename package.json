@@ -9,11 +9,13 @@
 		"preview": "vite preview",
 		"typecheck": "tsc --noEmit",
 		"format": "biome format --write",
-		"lint": "biome lint"
+		"lint": "biome lint",
+		"release": "release-it"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "2.5.5",
 		"lefthook": "^2.1.10",
+		"release-it": "^20.2.1",
 		"typescript": "^7.0.2",
 		"vite": "^8.1.5",
 		"vite-plugin-monkey": "^8.1.0"
