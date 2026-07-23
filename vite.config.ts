@@ -16,6 +16,7 @@ export default defineConfig({
 				match: ['https://www.chess.com/*'],
 				grant: ['GM_xmlhttpRequest', 'GM_getValue', 'GM_setValue'],
 				connect: ['lichess.org'],
+				license: 'GPL-3.0-only',
 			},
 		}),
 	],
