@@ -1,5 +1,6 @@
 import { isButtonInjected, injectButton, setButtonState } from './button';
 import { analyseOnLichess } from './analyseOnLichess';
+import { extractGameId, getStoredLichessUrl } from './storage';
 
 const GAME_PATH_FRAGMENTS = ['/game/'];
 
@@ -9,15 +10,21 @@ function isOnGamePage(): boolean {
   );
 }
 
+function isGameCached(): boolean {
+  const id = extractGameId();
+  return id !== null && getStoredLichessUrl(id) !== null;
+}
+
 async function handleClick(): Promise<void> {
   setButtonState('loading');
   try {
     await analyseOnLichess();
-    setButtonState('idle');
+    setButtonState('cached');
   } catch (err) {
     console.error('[cc2l]', err);
     setButtonState('error');
-    setTimeout(() => setButtonState('idle'), 3000);
+    const fallbackState = isGameCached() ? 'cached' : 'idle';
+    setTimeout(() => setButtonState(fallbackState), 3000);
   }
 }
 
@@ -30,7 +37,8 @@ function tick(): void {
 
   // .game-review-buttons-component doesn't exist mid-game.
   // Its presence IS the "game is over" signal — no separate guard needed.
-  injectButton(() => { void handleClick(); });
+  const initialState = isGameCached() ? 'cached' : 'idle';
+  injectButton(() => { void handleClick(); }, initialState);
 }
 
 setInterval(tick, 500);

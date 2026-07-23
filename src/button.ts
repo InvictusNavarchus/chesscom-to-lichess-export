@@ -5,10 +5,11 @@ import lichessLogoSvg from './assets/lichess-logo.svg?raw';
 const NS = `cc2l_${Math.random().toString(36).slice(2, 10)}`;
 const STYLE_ID = `${NS}_style`;
 
-type ButtonState = 'idle' | 'loading' | 'error';
+export type ButtonState = 'idle' | 'cached' | 'loading' | 'error';
 
 const BUTTON_CONTENT: Record<ButtonState, string> = {
   idle: `${lichessLogoSvg}<span>Analyse on Lichess</span>`,
+  cached: `${lichessLogoSvg}<span>Re-open on Lichess ✓</span>`,
   loading: `<span>⏳ Importing…</span>`,
   error: `<span>❌ Failed — retry?</span>`,
 };
@@ -22,14 +23,14 @@ export function isButtonInjected(): boolean {
  * Finds a suitable anchor in chess.com's sidebar and appends the button.
  * Returns false if no anchor was found yet (caller should retry next tick).
  */
-export function injectButton(onClick: () => void): boolean {
+export function injectButton(onClick: () => void, initialState: ButtonState = 'idle'): boolean {
   const anchor = document.querySelector<HTMLElement>('.game-review-buttons-component');
   if (!anchor) return false;
 
   const btn = document.createElement('button');
   btn.id = NS;
   btn.className = 'cc2l-btn';
-  btn.innerHTML = BUTTON_CONTENT.idle;
+  btn.innerHTML = BUTTON_CONTENT[initialState];
   btn.addEventListener('click', onClick);
 
   // Sits directly below the "Game Review" <a>, inside the same container.
