@@ -91,6 +91,12 @@ function injectStyles(): void {
       transition: background 0.15s;
       box-sizing: border-box;
     }
+    .game-over-modal-shell-buttons .cc2l-btn {
+      width: auto;
+	  padding: 1.3rem 2rem;
+      max-width: 100%;
+      margin: 8px 1.6rem;
+    }
     .cc2l-btn svg {
       width: 24px;
       height: 24px;
