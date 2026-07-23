@@ -82,7 +82,7 @@ function injectStyles(): void {
       padding: 2rem 4rem;
       margin-top: 8px;
       border: none;
-      border-radius: 4px;
+      border-radius: 0.5em;
       background: #d64f00;
       color: #ffffff;
       font-size: 22px;
