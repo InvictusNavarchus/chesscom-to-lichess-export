@@ -48,3 +48,7 @@ npm run format     # Biome format --write
 | TypeScript 7 | Type safety |
 | [Biome](https://biomejs.dev/) | Linting & formatting |
 | Greasemonkey APIs (`GM_xmlhttpRequest`, `GM_getValue`, `GM_setValue`) | Cross-origin requests & persistent storage |
+
+## License
+
+GPL-3.0-only
