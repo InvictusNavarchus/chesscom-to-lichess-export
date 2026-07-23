@@ -1,3 +1,5 @@
+import lichessLogoSvg from './assets/lichess-logo.svg?raw';
+
 // Stable random ID generated once per session — guarantees no collision with
 // chess.com's own IDs and makes the O(1) getElementById guard possible.
 const NS = `cc2l_${Math.random().toString(36).slice(2, 10)}`;
@@ -5,11 +7,11 @@ const STYLE_ID = `${NS}_style`;
 
 type ButtonState = 'idle' | 'loading' | 'error';
 
-const LABELS = {
-  idle: '⚡ Analyse on Lichess',
-  loading: '⏳ Importing…',
-  error: '❌ Failed — retry?',
-} satisfies Record<ButtonState, string>;
+const BUTTON_CONTENT: Record<ButtonState, string> = {
+  idle: `${lichessLogoSvg}<span>Analyse on Lichess</span>`,
+  loading: `<span>⏳ Importing…</span>`,
+  error: `<span>❌ Failed — retry?</span>`,
+};
 
 export function isButtonInjected(): boolean {
   // getElementById is an O(1) hash-map lookup — safe to call every 500 ms.
@@ -27,7 +29,7 @@ export function injectButton(onClick: () => void): boolean {
   const btn = document.createElement('button');
   btn.id = NS;
   btn.className = 'cc2l-btn';
-  btn.textContent = LABELS.idle;
+  btn.innerHTML = BUTTON_CONTENT.idle;
   btn.addEventListener('click', onClick);
 
   // Sits directly below the "Game Review" <a>, inside the same container.
@@ -40,7 +42,7 @@ export function injectButton(onClick: () => void): boolean {
 export function setButtonState(state: ButtonState): void {
   const btn = document.getElementById(NS) as HTMLButtonElement | null;
   if (!btn) return;
-  btn.textContent = LABELS[state];
+  btn.innerHTML = BUTTON_CONTENT[state];
   btn.disabled = state === 'loading';
 }
 
@@ -67,6 +69,11 @@ function injectStyles(): void {
       cursor: pointer;
       transition: background 0.15s;
       box-sizing: border-box;
+    }
+    .cc2l-btn svg {
+      width: 24px;
+      height: 24px;
+      flex-shrink: 0;
     }
     .cc2l-btn:hover:not(:disabled) { background: #c57445ff; }
     .cc2l-btn:disabled { opacity: 0.65; cursor: not-allowed; }
