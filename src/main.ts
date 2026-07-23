@@ -2,7 +2,7 @@ import { isButtonInjected, injectButton, setButtonState } from './button';
 import { analyseOnLichess } from './analyseOnLichess';
 import { extractGameId, getStoredLichessUrl } from './storage';
 
-const GAME_PATH_FRAGMENTS = ['/game/'];
+const GAME_PATH_FRAGMENTS = ['/game/', '/play/'];
 
 function isOnGamePage(): boolean {
 	return GAME_PATH_FRAGMENTS.some((fragment) =>

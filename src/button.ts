@@ -19,27 +19,42 @@ export function isButtonInjected(): boolean {
 	return document.getElementById(NS) !== null;
 }
 
+const ANCHOR_SELECTORS = [
+	'.game-over-modal-shell-buttons',
+	'.game-review-buttons-component',
+];
+
 /**
- * Finds a suitable anchor in chess.com's sidebar and appends the button.
+ * Finds a suitable anchor in chess.com's game-over modal shell or sidebar and appends the button.
  * Returns false if no anchor was found yet (caller should retry next tick).
  */
 export function injectButton(
 	onClick: () => void,
 	initialState: ButtonState = 'idle',
 ): boolean {
-	const anchor = document.querySelector<HTMLElement>(
-		'.game-review-buttons-component',
-	);
+	let anchor: HTMLElement | null = null;
+	for (const selector of ANCHOR_SELECTORS) {
+		anchor = document.querySelector<HTMLElement>(selector);
+		if (anchor) break;
+	}
+
 	if (!anchor) return false;
 
 	const btn = document.createElement('button');
 	btn.id = NS;
+	btn.type = 'button';
 	btn.className = 'cc2l-btn';
 	btn.innerHTML = BUTTON_CONTENT[initialState];
 	btn.addEventListener('click', onClick);
 
-	// Sits directly below the "Game Review" <a>, inside the same container.
-	anchor.appendChild(btn);
+	const secondaryActions = anchor.querySelector(
+		'.game-over-secondary-actions-row-component',
+	);
+	if (secondaryActions) {
+		anchor.insertBefore(btn, secondaryActions);
+	} else {
+		anchor.appendChild(btn);
+	}
 
 	injectStyles();
 	return true;
