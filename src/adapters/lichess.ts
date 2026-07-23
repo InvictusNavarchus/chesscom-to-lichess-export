@@ -5,81 +5,31 @@ interface LichessImportResponse {
 	url: string;
 }
 
-/**
- * Extracts target URL from GM_xmlhttpRequest response,
- * handling both auto-followed redirects (status 200 with finalUrl)
- * and direct 302/303 redirect responses with a Location header.
- */
-function extractRedirectUrl(response: {
-	status: number;
-	finalUrl?: string;
-	responseHeaders?: string;
-}): string | null {
-	if (response.finalUrl && !response.finalUrl.endsWith('/import')) {
-		return response.finalUrl;
-	}
-
-	if (response.responseHeaders) {
-		const match = response.responseHeaders.match(/^location:\s*(.+)$/im);
-		if (match?.[1]) {
-			const loc = match[1].trim();
-			if (loc.startsWith('http://') || loc.startsWith('https://')) {
-				return loc;
-			}
-			return new URL(loc, 'https://lichess.org').toString();
-		}
-	}
-
-	if (response.finalUrl) {
-		return response.finalUrl;
-	}
-
-	return null;
-}
-
-/**
- * POSTs a PGN to the Lichess web import endpoint with auto-analysis enabled (`analyse=true`).
- * Returns the game ID and direct analysis URL.
- */
+/** POSTs a PGN to the Lichess import API and returns the analysis URL. */
 export function importPgn(pgn: string): Promise<LichessImportResponse> {
 	return new Promise((resolve, reject) => {
-		const normalizedPgn = pgn.replace(/\r?\n/g, '\r\n');
-		const body = new URLSearchParams({
-			pgn: normalizedPgn,
-			pgnFile: '',
-			analyse: 'true',
-		}).toString();
-
 		GM_xmlhttpRequest({
 			method: 'POST',
-			url: 'https://lichess.org/import',
+			url: 'https://lichess.org/api/import',
 			headers: {
 				'Content-Type': 'application/x-www-form-urlencoded',
+				Accept: 'application/json',
+				'User-Agent': 'chess-com-to-lichess-userscript/1.0',
 			},
-			data: body,
+			data: `pgn=${encodeURIComponent(pgn)}`,
 			onload(response) {
-				if (response.status < 200 || response.status >= 400) {
-					reject(new Error(`Lichess returned status ${response.status}`));
+				if (response.status !== 200) {
+					reject(new Error(`Lichess API returned ${response.status}`));
 					return;
 				}
-
-				const targetUrl = extractRedirectUrl(response);
-				if (!targetUrl) {
-					reject(
-						new Error(
-							'Could not determine imported game URL from Lichess response',
-						),
-					);
-					return;
+				try {
+					const data = JSON.parse(
+						response.responseText,
+					) as LichessImportResponse;
+					resolve(data);
+				} catch {
+					reject(new Error('Failed to parse Lichess response'));
 				}
-
-				const idMatch = targetUrl.match(/lichess\.org\/([a-zA-Z0-9]{8,12})/);
-				const id = idMatch ? idMatch[1] : '';
-
-				resolve({
-					id,
-					url: targetUrl,
-				});
 			},
 			onerror() {
 				reject(new Error('Network error contacting Lichess'));
