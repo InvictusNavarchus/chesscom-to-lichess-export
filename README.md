@@ -1,5 +1,8 @@
 # Chess.com → Lichess Analyser
 
+[![version](https://img.shields.io/github/package-json/v/InvictusNavarchus/chesscom-to-lichess-export)](https://github.com/InvictusNavarchus/chesscom-to-lichess-export/blob/master/package.json)
+[![License](https://img.shields.io/github/license/InvictusNavarchus/chesscom-to-lichess-export)](https://github.com/InvictusNavarchus/chesscom-to-lichess-export/blob/master/LICENSE)
+
 A userscript that adds a one-click **"Analyse on Lichess"** button to Chess.com game pages. It extracts the PGN from the page, imports it into Lichess via their public API, and opens the analysis board in a new tab.
 
 ## Features
