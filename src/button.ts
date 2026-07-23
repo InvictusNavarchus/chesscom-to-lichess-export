@@ -21,11 +21,15 @@ export function isButtonInjected(): boolean {
  * Returns false if no anchor was found yet (caller should retry next tick).
  */
 export function injectButton(onClick: () => void): boolean {
+  // Prefer the icon row (Share, Flip, etc.) — present in both State A and B.
+  const iconRow = document.querySelector<HTMLElement>('.game-icons-container-component');
+
+  // Fallback: the nav-button row, then the whole sidebar.
   const anchor =
+    iconRow ??
+    document.querySelector<HTMLElement>('.game-buttons-container-component') ??
     document.querySelector<HTMLElement>('.game-buttons-component') ??
-    document.querySelector<HTMLElement>('.sidebar-component') ??
-    document.querySelector<HTMLElement>('[data-cy="sidebar-share-icon"]')?.closest<HTMLElement>('div') ??
-    document.querySelector<HTMLElement>('.game-controls-component');
+    document.querySelector<HTMLElement>('.sidebar-component');
 
   if (!anchor) return false;
 
@@ -34,7 +38,19 @@ export function injectButton(onClick: () => void): boolean {
   btn.className = 'cc2l-btn';
   btn.textContent = LABELS.idle;
   btn.addEventListener('click', onClick);
-  anchor.appendChild(btn);
+
+  if (iconRow) {
+    // Insert before the spacer so it sits among the icon buttons,
+    // not after Flip Board at the far right.
+    const spacer = iconRow.querySelector('.game-icons-container-spacer');
+    if (spacer) {
+      iconRow.insertBefore(btn, spacer);
+    } else {
+      iconRow.appendChild(btn);
+    }
+  } else {
+    anchor.appendChild(btn);
+  }
 
   injectStyles();
   return true;
@@ -54,21 +70,21 @@ function injectStyles(): void {
   style.id = STYLE_ID;
   style.textContent = `
     .cc2l-btn {
-      display: flex;
+      display: inline-flex;
       align-items: center;
       justify-content: center;
-      padding: 8px 14px;
-      margin: 6px 4px 0;
+      padding: 6px 12px;
+      margin: 0 4px;
       border: none;
       border-radius: 4px;
       background: #3692e7;
       color: #fff;
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 600;
       cursor: pointer;
-      width: calc(100% - 8px);
       transition: background 0.15s;
       box-sizing: border-box;
+      vertical-align: middle;
     }
     .cc2l-btn:hover:not(:disabled) { background: #2778c4; }
     .cc2l-btn:disabled { opacity: 0.65; cursor: not-allowed; }
