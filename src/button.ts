@@ -8,51 +8,56 @@ const STYLE_ID = `${NS}_style`;
 export type ButtonState = 'idle' | 'cached' | 'loading' | 'error';
 
 const BUTTON_CONTENT: Record<ButtonState, string> = {
-  idle: `${lichessLogoSvg}<span>Analyse on Lichess</span>`,
-  cached: `${lichessLogoSvg}<span>Re-open on Lichess ✓</span>`,
-  loading: `<span>⏳ Importing…</span>`,
-  error: `<span>❌ Failed — retry?</span>`,
+	idle: `${lichessLogoSvg}<span>Analyse on Lichess</span>`,
+	cached: `${lichessLogoSvg}<span>Re-open on Lichess ✓</span>`,
+	loading: `<span>⏳ Importing…</span>`,
+	error: `<span>❌ Failed — retry?</span>`,
 };
 
 export function isButtonInjected(): boolean {
-  // getElementById is an O(1) hash-map lookup — safe to call every 500 ms.
-  return document.getElementById(NS) !== null;
+	// getElementById is an O(1) hash-map lookup — safe to call every 500 ms.
+	return document.getElementById(NS) !== null;
 }
 
 /**
  * Finds a suitable anchor in chess.com's sidebar and appends the button.
  * Returns false if no anchor was found yet (caller should retry next tick).
  */
-export function injectButton(onClick: () => void, initialState: ButtonState = 'idle'): boolean {
-  const anchor = document.querySelector<HTMLElement>('.game-review-buttons-component');
-  if (!anchor) return false;
+export function injectButton(
+	onClick: () => void,
+	initialState: ButtonState = 'idle',
+): boolean {
+	const anchor = document.querySelector<HTMLElement>(
+		'.game-review-buttons-component',
+	);
+	if (!anchor) return false;
 
-  const btn = document.createElement('button');
-  btn.id = NS;
-  btn.className = 'cc2l-btn';
-  btn.innerHTML = BUTTON_CONTENT[initialState];
-  btn.addEventListener('click', onClick);
+	const btn = document.createElement('button');
+	btn.id = NS;
+	btn.className = 'cc2l-btn';
+	btn.innerHTML = BUTTON_CONTENT[initialState];
+	btn.addEventListener('click', onClick);
 
-  // Sits directly below the "Game Review" <a>, inside the same container.
-  anchor.appendChild(btn);
+	// Sits directly below the "Game Review" <a>, inside the same container.
+	anchor.appendChild(btn);
 
-  injectStyles();
-  return true;
+	injectStyles();
+	return true;
 }
 
 export function setButtonState(state: ButtonState): void {
-  const btn = document.getElementById(NS) as HTMLButtonElement | null;
-  if (!btn) return;
-  btn.innerHTML = BUTTON_CONTENT[state];
-  btn.disabled = state === 'loading';
+	const btn = document.getElementById(NS) as HTMLButtonElement | null;
+	if (!btn) return;
+	btn.innerHTML = BUTTON_CONTENT[state];
+	btn.disabled = state === 'loading';
 }
 
 function injectStyles(): void {
-  if (document.getElementById(STYLE_ID)) return;
+	if (document.getElementById(STYLE_ID)) return;
 
-  const style = document.createElement('style');
-  style.id = STYLE_ID;
-  style.textContent = `
+	const style = document.createElement('style');
+	style.id = STYLE_ID;
+	style.textContent = `
     .cc2l-btn {
       display: flex;
       align-items: center;
@@ -79,5 +84,5 @@ function injectStyles(): void {
     .cc2l-btn:hover:not(:disabled) { background: #c57445ff; }
     .cc2l-btn:disabled { opacity: 0.65; cursor: not-allowed; }
   `;
-  document.head.appendChild(style);
+	document.head.appendChild(style);
 }
