@@ -56,13 +56,13 @@ function injectStyles(): void {
       justify-content: center;
       gap: 6px;
       width: 100%;
-      padding: 10px 14px;
+      padding: 2rem 4rem;
       margin-top: 8px;
       border: none;
       border-radius: 4px;
       background: #d64f00;
       color: #ffffff;
-      font-size: 14px;
+      font-size: 22px;
       font-weight: 600;
       cursor: pointer;
       transition: background 0.15s;
