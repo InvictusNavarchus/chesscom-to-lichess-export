@@ -60,8 +60,8 @@ function injectStyles(): void {
       margin-top: 8px;
       border: none;
       border-radius: 4px;
-      background: #3692e7;
-      color: #fff;
+      background: #d64f00;
+      color: #ffffff;
       font-size: 14px;
       font-weight: 600;
       cursor: pointer;
