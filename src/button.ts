@@ -68,7 +68,7 @@ function injectStyles(): void {
       transition: background 0.15s;
       box-sizing: border-box;
     }
-    .cc2l-btn:hover:not(:disabled) { background: #2778c4; }
+    .cc2l-btn:hover:not(:disabled) { background: #c57445ff; }
     .cc2l-btn:disabled { opacity: 0.65; cursor: not-allowed; }
   `;
   document.head.appendChild(style);
