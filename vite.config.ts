@@ -9,7 +9,7 @@ export default defineConfig({
 				name: 'Chess.com → Lichess Analyser',
 				author: 'Invictus Navarchus',
 				namespace: 'https://github.com/InvictusNavarchus',
-				version: '1.1.1',
+				version: '1.2.0',
 				description:
 					'One-click PGN export from Chess.com directly to Lichess analysis',
 				icon: 'https://lichess.org/favicon.ico',
